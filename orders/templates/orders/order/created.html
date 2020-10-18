@@ -1,0 +1,25 @@
+{% extends "store/base.html" %}
+
+{% block title %}
+  Thank you
+{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-lg 2">
+
+  </div>
+  <div class="col-lg-10">
+    <div class="jumbotron">
+      <h1 class="display-5">Grazie {{ order.nome}}!</h1>
+      <p class="lead">Il tuo ordine è stato completato con successo.</p>
+      <p class="lead">Il tuo numero d'ordine è: <strong>{{ order.id }}</strong>.</p>
+      <hr class="my-4">
+      <p>A breve riceverai una mail di conferma.</p>
+      <p>Per ogni informazione contattaci al XXXXXX</p>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

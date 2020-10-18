@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+   integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+   <script src="https://kit.fontawesome.com/93bebe9bc4.js" crossorigin="anonymous"></script>
+
+
+    <meta charset="utf-8">
+    <title>Prova</title>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="jumbotron">
+        <input type="text" id="number" value="0"/>
+        <button class="btn btn-sm btn-info incrementa">
+            <span  style="font-size: 2em; color: white;" class="fas fa-plus"></span>
+        </button>
+        <button class="btn btn-sm btn-info decrementa"> 
+          <span style="font-size: 2em; color: white;" class="fas fa-minus"></span>
+        </button>
+      </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    <script>
+    var incrementa_btns=document.getElementsByClassName('incrementa')
+    var decrementa_btns=document.getElementsByClassName('decrementa')
+
+    for(i=0; i<incrementa_btns.length;i++){
+      incrementa_btns[i].addEventListener('click',function(){
+        var value = parseFloat(document.getElementById('number').value);
+        value = isNaN(value) ? 0 : value;
+        value= Math.round((value+0.1)*10)/10;
+        document.getElementById('number').value = value;
+      })
+    }
+
+    for(i=0; i<decrementa_btns.length;i++){
+      decrementa_btns[i].addEventListener('click',function(){
+        var value = parseFloat(document.getElementById('number').value);
+        value = isNaN(value) ? 0 : value;
+        value= Math.round((value-0.1)*10)/10;
+        if(value<0){value=0}
+        document.getElementById('number').value = value;
+      })
+    }
+
+
+    </script>
+
+  </body>
+</html>

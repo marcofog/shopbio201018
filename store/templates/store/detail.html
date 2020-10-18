@@ -1,0 +1,153 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}
+  {{ product.nome_prodotto }}
+{% endblock %}
+{% block content %}
+
+
+<div class="product-detail">
+  <div class="row">
+    <div class="col-lg-6">
+      <img class="img-detail" src="{% if product.immagine %}{% static product.imageURL %}{% else %} {% static "images/no_image.png" %}{% endif %}">
+
+      <h5  class="text-right my-4">
+        Prezzo :
+        <strong>€{{product.prezzo_quantità|floatformat:2}}/{{product.unità_misura}}</strong>
+      </h5>
+
+
+      <form action="{% url "cart:cart_add" product.id %}" method="POST" class="text-right">
+        <h5 class="my-4" style="display:inline;" >{{product.unità_misura}}:</h5>
+        {{cart_product_form}}
+        {% csrf_token %}
+        <span class="btn btn-sm btn-info incrementa">
+            <span  style="font-size: 2em; color: white;" class="fas fa-plus"></span>
+        </span>
+        <span class="btn btn-sm btn-info decrementa">
+          <span style="font-size: 2em; color: white;" class="fas fa-minus"></span>
+        </span>
+        <!-- <input type="submit" class="btn btn-outline-success"  value="Aggiungi al carrello" id="salva_q"> -->
+        <button type="submit" class="btn btn-outline-success" name="next" value="{{ request.GET.next }}" id="salva_q"> <i class="fas fa-shopping-cart"></i> Salva</button>
+      </form>
+
+      <hr>
+
+      <form action="{% url "cart:cart_add_pz" product.id %}" method="POST" class="{% if product.flag_pezzi %} show {% else %} hidden {% endif %} text-right">
+        <h5 class="my-4" style="display:inline;" >Pezzi:</h5>
+        {{cart_product_form_pz}}
+        {% csrf_token %}
+        <span class="btn btn-sm btn-info incrementa_pz">
+            <span  style="font-size: 2em; color: white;" class="fas fa-plus"></span>
+        </span>
+        <span class="btn btn-sm btn-info decrementa_pz">
+          <span style="font-size: 2em; color: white;" class="fas fa-minus"></span>
+        </span>
+
+        <button type="submit" class="btn btn-outline-success" name="next" value="{{ request.GET.next }}" id="salva_pz"> <i class="fas fa-shopping-cart"></i> Salva</button>
+        <!-- <input type="submit" class="btn btn-outline-success"  value="Aggiungi al carrello" id="salva_pz"> -->
+      </form>
+
+
+
+    </div>
+    <div class="col-lg-6">
+      <h1>{{ product.nome_prodotto }}</h1>
+      <h2>
+        <a href="{{ product.categoria.get_absolute_url }}">
+          {{ product.categoria }}
+        </a>
+      </h2>
+      <p> {{ product.descrizione_prodotto|linebreaks }}</p>
+      <p>{{ product.informazioni|linebreaks }}</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+var incrementa_btns=document.getElementsByClassName('incrementa')
+var decrementa_btns=document.getElementsByClassName('decrementa')
+
+for(i=0; i<incrementa_btns.length;i++){
+  incrementa_btns[i].addEventListener('click',function(){
+    var value = parseFloat(document.getElementById('number').value);
+    value = isNaN(value) ? 0 : value;
+    value= Math.round((value+{{ product.unità_quantità|unlocalize }} )*10)/10;
+    document.getElementById('number').value = value;
+    abilita();
+  })
+}
+
+for(i=0; i<decrementa_btns.length;i++){
+  decrementa_btns[i].addEventListener('click',function(){
+    var value = parseFloat(document.getElementById('number').value);
+    value = isNaN(value) ? 0 : value;
+    value= Math.round((value-{{ product.unità_quantità|unlocalize }})*10)/10;
+    if(value<0){value=0}
+    document.getElementById('number').value = value;
+    abilita();
+  })
+}
+
+var incrementa_btns_pz=document.getElementsByClassName('incrementa_pz')
+var decrementa_btns_pz=document.getElementsByClassName('decrementa_pz')
+
+for(i=0; i<incrementa_btns_pz.length;i++){
+  incrementa_btns_pz[i].addEventListener('click',function(){
+    var value = parseFloat(document.getElementById('number_pz').value);
+    value = isNaN(value) ? 0 : value;
+    value= Math.round((value+1 )*10)/10;
+    document.getElementById('number_pz').value = value;
+    abilita_pz();
+  })
+}
+
+for(i=0; i<decrementa_btns_pz.length;i++){
+  decrementa_btns_pz[i].addEventListener('click',function(){
+    var value = parseFloat(document.getElementById('number_pz').value);
+    value = isNaN(value) ? 0 : value;
+    value= Math.round((value-1)*10)/10;
+    if(value<0){value=0}
+    document.getElementById('number_pz').value = value;
+    abilita_pz();
+  })
+}
+
+chk_btn = document.getElementById('number');
+chk_btn.addEventListener('change', abilita);
+
+function abilita() {
+        var bt = document.getElementById('salva_q');
+        var value = parseFloat(document.getElementById('number').value);
+        if (chk_btn.value != '' & value>0) {
+            bt.disabled = false;
+        }
+        else {
+            bt.disabled = true;
+        }
+    }
+
+
+chk_btn_pz = document.getElementById('number_pz');
+chk_btn_pz.addEventListener('change', abilita_pz);
+
+function abilita_pz() {
+        var bt = document.getElementById('salva_pz');
+        var value = parseInt(document.getElementById('number_pz').value);
+        if (value != '' & value>0) {
+            bt.disabled = false;
+        }
+        else {
+            bt.disabled = true;
+        }
+    }
+
+document.addEventListener("DOMContentLoaded", abilita);
+document.addEventListener("DOMContentLoaded", abilita_pz);
+</script>
+
+{% endblock %}

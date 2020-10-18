@@ -1,0 +1,90 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}
+  Your shopping cart
+{% endblock %}
+
+{% block content %}
+  <h1>Il tuo carello</h1>
+
+
+  <div class="box-element">
+  <div class="cart-row">
+    <div style="flex:2"></div>
+    <div style="flex:2"><strong>Prodotto</strong></div>
+    <!-- <div style="flex:1"><strong>Prezzo</strong></div> -->
+    <div style="flex:1"><strong>Quantità</strong></div>
+    <div style="flex:1"><strong>Totale</strong></div>
+    <div style="flex:1"><strong>Pezzi</strong></div>
+    <div style="flex:1"><strong>Rimuovi</strong></div>
+  </div>
+
+  {% for item in cart %}
+    {% with product=item.product %}
+    <div class="cart-row">
+      <div style="flex:2">
+        <a href="{{ product.get_absolute_url }}?next={{ request.path|urlencode }}">
+          <img class="row-image" src="{% if product.immagine %}{% static product.imageURL %}
+          {% else %}{% static "images/no_image.png" %}{% endif %}">
+        </a>
+      </div>
+      <div style="flex:2"><p>{{ product.nome_prodotto }}</p></div>
+      <!-- <div style="flex:1">
+        <p>€{{ item.price|floatformat:2 }}</p>
+      </div> -->
+      <div style="flex:1">
+        <p>{{item.quantity|floatformat:2}}</p>
+      </div>
+      <div style="flex:1">
+        <!-- <p>${{item.get_total|floatformat:2}}</p> -->
+        <p>€ {{ item.total_price|floatformat:2 }}</p>
+      </div>
+      <div style="flex:1">
+        <p>{{item.quantity_pz|floatformat:0}}</p>
+      </div>
+      <div style="flex:1">
+        <form action="{% url "cart:cart_remove" product.id %}" method="post">
+          <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i>
+          </button>
+          {% csrf_token %}
+        </form>
+      </div>
+    </div>
+    {% endwith %}
+  {% endfor %}
+
+  <div class="cart-row">
+    <div style="flex:5">
+      <p><strong>TOTALE(*):</strong> </p>
+    </div>
+    <div style="flex:3">
+      <p> <strong>€{{ cart.get_total_price|floatformat:2 }}</strong> </p>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="container">
+  <div class="row">
+    <p>(*)Il Totale è indicativo e si riferisce solo alle voci "Quantità". Non include le voci in "Pezzi".</p>
+  </div>
+</div>
+<hr>
+<div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-lg-auto">
+          <a href="{% url "store:product_list" %}" class="btn btn-info btn-block">Torna agli acquisti</a>
+      </div>
+      <span> &nbsp </span>
+      <div class="col-lg-auto">
+        {%if cart|length > 0 %}
+          <a class="btn btn-success btn-block" href="{% url 'orders:order_create' %}" role="button">Invia Ordine adesso</a>
+        {% endif %}
+
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
